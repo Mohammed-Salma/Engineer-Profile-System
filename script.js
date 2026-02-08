@@ -90,20 +90,32 @@ function loadFromStorage() {
   const saved = localStorage.getItem("engineers");
   if (saved) {
     engineers = JSON.parse(saved);
+  } else {
+    saveToStorage();
   }
 }
 
 // Show 8 random engineers
 function showRandomEngineers() {
-  const shuffled = [...engineers].sort(() => 0.5 - Math.random());
+  const shuffled = [...engineers].sort((a, b) => 0.5 - Math.random());
   const randomEight = shuffled.slice(0, 8);
-  displayEngineers(randomEight);
+  const sortedEight = randomEight.sort((a, b) => a.name.localeCompare(b.name));
+  displayEngineers(sortedEight);
 }
 
 // Display engineers
 function displayEngineers(list) {
   const container = document.getElementById("engineersList");
   container.innerHTML = "";
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; width: 100%; padding: 20px; color: #666; font-size: 1.2rem;">
+        <p>🔍 No engineers found with this name.</p>
+      </div>
+    `;
+    return;
+  }
 
   list.forEach((engineer) => {
     const card = document.createElement("div");
@@ -126,9 +138,9 @@ function setupSearch() {
     if (term === "") {
       showRandomEngineers();
     } else {
-      const filtered = engineers.filter((e) =>
-        e.name.toLowerCase().includes(term),
-      );
+      const filtered = engineers
+        .filter((e) => e.name.toLowerCase().includes(term))
+        .sort((a, b) => a.name.localeCompare(b.name));
       displayEngineers(filtered);
     }
   };
@@ -142,10 +154,18 @@ function openModal(id) {
   document.getElementById("modalName").textContent = engineer.name;
   document.getElementById("modalSpecialty").textContent = engineer.specialty;
   document.getElementById("modalExperience").textContent = engineer.experience;
-  document.getElementById("modalHired").textContent = engineer.hired
-    ? "Employed"
-    : "Not Employed";
+  const statusText = engineer.hired ? "Employed" : "Not Employed";
+  document.getElementById("modalHired").textContent = statusText;
 
+  // Update Hire Button Style and Text
+  const hireBtn = document.getElementById("hireBtn");
+  if (engineer.hired) {
+    hireBtn.textContent = "Mark as Not Employed";
+    hireBtn.className = "btn btn-fire";
+  } else {
+    hireBtn.textContent = "Mark as Employed";
+    hireBtn.className = "btn btn-hire";
+  }
   document.getElementById("modal").style.display = "flex";
 }
 
@@ -154,6 +174,14 @@ function closeModal() {
   document.getElementById("modal").style.display = "none";
 }
 
+// // Close Modal when clicking outside the content
+// window.onclick = function (event) {
+//   const modal = document.getElementById("modal");
+//   if (event.target == modal) {
+//     closeModal();
+//   }
+// };
+
 // Toggle Hiring Status
 function toggleHire() {
   const engineer = engineers.find((e) => e.id === currentEngineerId);
@@ -161,9 +189,6 @@ function toggleHire() {
   saveToStorage();
 
   // Update View
-  document.getElementById("modalHired").textContent = engineer.hired
-    ? "Employed"
-    : "Not Employed";
+  openModal(currentEngineerId);
   showRandomEngineers();
-  closeModal();
 }
