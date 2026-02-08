@@ -90,6 +90,8 @@ function loadFromStorage() {
   const saved = localStorage.getItem("engineers");
   if (saved) {
     engineers = JSON.parse(saved);
+  } else {
+    saveToStorage();
   }
 }
 
@@ -105,6 +107,15 @@ function showRandomEngineers() {
 function displayEngineers(list) {
   const container = document.getElementById("engineersList");
   container.innerHTML = "";
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; width: 100%; padding: 20px; color: #666; font-size: 1.2rem;">
+        <p>🔍 No engineers found with this name.</p>
+      </div>
+    `;
+    return;
+  }
 
   list.forEach((engineer) => {
     const card = document.createElement("div");
@@ -127,11 +138,9 @@ function setupSearch() {
     if (term === "") {
       showRandomEngineers();
     } else {
-      const filtered = engineers.filter((e) =>
-        e.name
-          .toLowerCase()
-          .includes(term))
-          .sort((a, b) => a.name.localeCompare(b.name));
+      const filtered = engineers
+        .filter((e) => e.name.toLowerCase().includes(term))
+        .sort((a, b) => a.name.localeCompare(b.name));
       displayEngineers(filtered);
     }
   };
