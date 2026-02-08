@@ -95,9 +95,10 @@ function loadFromStorage() {
 
 // Show 8 random engineers
 function showRandomEngineers() {
-  const shuffled = [...engineers].sort(() => 0.5 - Math.random());
+  const shuffled = [...engineers].sort((a, b) => 0.5 - Math.random());
   const randomEight = shuffled.slice(0, 8);
-  displayEngineers(randomEight);
+  const sortedEight = randomEight.sort((a, b) => a.name.localeCompare(b.name));
+  displayEngineers(sortedEight);
 }
 
 // Display engineers
@@ -127,8 +128,10 @@ function setupSearch() {
       showRandomEngineers();
     } else {
       const filtered = engineers.filter((e) =>
-        e.name.toLowerCase().includes(term),
-      );
+        e.name
+          .toLowerCase()
+          .includes(term))
+          .sort((a, b) => a.name.localeCompare(b.name));
       displayEngineers(filtered);
     }
   };
