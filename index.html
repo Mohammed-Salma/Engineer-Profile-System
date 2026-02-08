@@ -47,9 +47,30 @@
       }
       .modal-content {
         background: white;
-        padding: 20px;
-        border-radius: 5px;
+        padding: 25px;
+        border-radius: 10px;
         width: 400px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .btn-hire {
+        background-color: #2ecc71;
+        color: white;
+      }
+      .btn-fire {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .btn-close {
+        background-color: #95a5a6;
+        color: white;
+        margin-left: 10px;
       }
       .footer {
         margin-top: 40px;
@@ -78,8 +99,10 @@
         <p><strong>Specialty:</strong> <span id="modalSpecialty"></span></p>
         <p><strong>Experience:</strong> <span id="modalExperience"></span></p>
         <p><strong>Hiring Status:</strong> <span id="modalHired"></span></p>
-        <button onclick="toggleHire()">Change Hiring Status</button>
-        <button onclick="closeModal()">Close</button>
+        <div style="margin-top: 20px">
+          <button id="hireBtn" class="btn" onclick="toggleHire()"></button>
+          <button class="btn btn-close" onclick="closeModal()">Close</button>
+        </div>
       </div>
     </div>
 
