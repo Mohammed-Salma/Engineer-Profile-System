@@ -191,5 +191,4 @@ function toggleHire() {
   // Update View
   openModal(currentEngineerId);
   showRandomEngineers();
-  closeModal();
 }
